@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Desert Disturbance</title>
+    <script src="libraries/p5.js" type="text/javascript"></script>
+
+    <script src="libraries/p5.dom.js" type="text/javascript"></script>
+    <script src="libraries/p5.sound.js" type="text/javascript"></script>
+    <script src="libraries/p5.play.js" type="text/javascript"></script>
+
+
+    <script src="//192.168.1.100:8000/socket.io/socket.io.js" type="text/javascript"></script>
+    
+    <script src="sketch.js" type="text/javascript"></script>
+
+    <style> body {padding: 0; margin: 0;} canvas {vertical-align: top;} </style>
+  </head>
+  <body>
+
+    <script>
+      var p;
+      //var touch1, touch2, touch3;
+
+      var socket;
+      var url='192.168.1.100';
+      var port=8000;
+
+      socket = io.connect(url+':'+port);//create instance of socket io
+      socket.on('tiggers', function (data) { //listen for data from app.js
+      p = data.tiggers;
+      console.log(p);
+     });
+
+  //   var pannel = p.split(",");
+  //   touch1= pannel[1];
+  //   touch2= pannel[2];
+  //   touch3= pannel[3];
+  
+
+
+      function goatTrigger(){
+        socket.emit('startaledGoat',{g: "goatAlarm" });
+        console.log("you have alerted the Goat");
+      }
+
+      function cammelTrigger(){
+        socket.emit('startaledcammel',{c:"CammelAlarm"});
+        console.log("you have alerted the Cammel");
+      }
+
+      function birdTrigger(){
+        socket.emit('startaledbird',{b:"Cammelbird"});
+        console.log("you have alerted the birds");
+      }
+    </script>
+
+  </body>
+</html>
