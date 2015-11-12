@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- base copy from Ayo's github -->
+<html lang="en" style="visibility: visible;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Virtual Jack O' Lantern</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+
+	</head>
+	<body>
+		<!-- pumpkin to be replaced -->
+		<div id="pumpkin">
+			<img  src="images/pumpkin-day.svg" id="changer" /></a>
+		</div>
+
+		<!-- butons,incomplete-->
+		<div id="input">
+		Red: <input type="number" id="data.r" value="***" min="1" max="255">
+		Green: <input type="number" id="data.g" value="***" min="1" max="255">
+		Blue: <input type="number" id="data.b" value="***" min="1" max="255">
+		<button onclick="submit()" > Send it</button>
+		<p>Change the Light inside Jack-o-Lantern too?!</p>		
+		</div>
+
+<style>
+	body {
+		background-color: #7ec0ee;/*daytime blue default*/
+		/*background-image: url("image/background-day.svg");*/
+		/*background-repeat: repeat; */
+
+	}
+	#pumpkin{
+		height: 50vh;
+		width: 50vw;
+		padding-top:3vh; 
+		display: block;
+		margin: auto;
+		position: relative;
+	}
+
+	#input{
+		height: 10vh;
+		width: 50vw;
+		display: block;
+		margin: 21% auto auto 37%;
+		font-family: arial;
+		color: black;
+	}
+
+</style>
+
+<script>
+var socket;
+var url='192.168.1.105';
+var port=8000;//semi?
+
+var GPIO = require('onoff').Gpio,
+    rled = new GPIO(17, 'out');
+    gled = new GPIO(18, 'out');
+    bled = new GPIO(27, 'out');
+
+var url='http//192.168.1.105';//come back to this- todo
+
+//$(document).ready(function(){
+	socket = io.connect(url+':'+port);
+
+	socket.on('toScreen', function (data) {
+		console.log(data);
+		light(data[5]);
+	});
+
+//beinging code for light change with data (Audrey's code ;-/)
+function ledOff(){
+	rled.writeSync(0);
+	gled.writeSync(0);
+	bled.writeSync(0);
+}
+
+function ColorLed(){
+	rled.writeSync(rval);
+	gled.writeSync(gval);
+	bled.writeSync(bval);
+
+}
+
+function light(pum) {
+
+  var pum = parseInt(pum);
+  console.log(pum);
+
+    if(pum < 4) {
+      console.log("Jack O Lantern is lit!");
+      colorLed();
+      //change background color
+      $("body").css("background-color","black");
+      //swap image ref.
+      $("#pumpkin").attr("src", "images/pumpkin-night.svg");
+      $("#input").css("type","white")
+
+
+    } else {
+      console.log("Jack O Lantern is off.");
+      ledOff();
+	  $("body").css("background-color","#7ec0ee");
+      //swap image ref.
+      $("#changer").attr("src", "images/pumpkin-day.svg");
+    }
+  }
+
+//send data back to pi
+function submit(){
+  var rval = document.getElementById('data.r').value;
+  var gval = document.getElementById('data.g').value;
+  var bval = document.getElementById('data.b').value;
+
+  socket.emit('submit',{ r: rval, g: gval, b:bval }); 
+} 
+
+
+</script>
+		<!-- your server info -->
+		<script src="//192.168.1.105:8000/socket.io/socket.io.js" type="text/javascript"></script>
+		<script src="js/jquery.js" type="text/javascript"></script>
+		<script src="js/three.min.js"></script>
+
+	</body>
+
+</html>

@@ -14,7 +14,7 @@ while True:
     newmails = int(feedparser.parse("https://" + user + ":" + passwd + "@mail.google.com/gmail/feed/atom")["feed"]["fullcount"])
     
     def emailcount(n):
-        if n > 0
+        if n > 0:
             print "you have "+str(n)+" new email(s)"
         else:
             print "you have no new email"
